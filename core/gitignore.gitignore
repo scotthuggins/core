@@ -1,0 +1,8 @@
+# Photo upload dirs
+core/media/
+
+# Vendor resources
+core/vendor/
+
+# Database backups
+*.sql

@@ -1,0 +1,1 @@
+<?php echo '<button id="userAction" class="btn border">User Action Button</button>'; ?>

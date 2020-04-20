@@ -6,3 +6,6 @@ core/vendor/
 
 # Database backups
 *.sql
+
+# Apanta
+.settings/

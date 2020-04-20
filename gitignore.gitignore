@@ -1,5 +1,12 @@
 # Photo upload dirs
-core/media/
+core/media/*
+**/*.png
+**/*.jpg
+**/*.pdf
+**/*.mp3
+
+
+
 
 # Vendor resources
 core/vendor/
@@ -9,3 +16,5 @@ core/vendor/
 
 # Apanta
 .settings/
+
+

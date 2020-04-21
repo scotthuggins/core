@@ -32,7 +32,7 @@ echo '<div class="row page_segment w-100 " id="page_segment_'.${$plur_entity}->p
 				</div><div id="viewport_tile_'.$entity_name.'_'.$entity->id.'" style="max-height:350;"  class="scrolling-y ">';
 				$hooks->do_action($entity_name.'_tile_viewport',$entity);
 				
-				include(dirname(dirname(__FILE__))."/default/write_media_module_dynamic.php");
+				//include(dirname(dirname(__FILE__))."/default/write_media_module_dynamic.php");
 				echo '
 				</div><div class="">
 					<ul class="list-group">

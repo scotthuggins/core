@@ -8,7 +8,7 @@
 		}
 		
 		
-		$hooks->do_action($entity_name.'_viewport',$plur_entity);
+		//$hooks->do_action($entity_name.'_viewport',$plur_entity);
 		
 		
 		//if the parent is a media object, add it to the media array

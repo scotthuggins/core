@@ -31,7 +31,7 @@ class calendar extends baseEntity{
 		$this->config['primaryIDProperty'] = 'name';
 		
 		//Config Propery used for extending the primaryIDProperty, may be more than one existing property name
-		$this->config['primaryViewProperties'] = array();
+		$this->config['primaryViewProperties'] = array("name");
 		
 		//NEW CONFIG property used for created internal map of objects
 		$this->config['associations']['belongsTo'] = array('user','company');
@@ -53,7 +53,7 @@ class calendar extends baseEntity{
 		//For hook actions see /core/TODO.php
 		
 		//$hooks->add_action('calendar_main_toolbar', array($this, 'calendarViewButton'));
-		$hooks->add_action('calendar_table_viewport', array($this, 'calendarView'));
+		//$hooks->add_action('calendar_table_viewport', array($this, 'calendarView'));
 		$hooks->add_action('calendar_tile_viewport', array($this, 'calendarView'));
 		$hooks->add_action('calendar_modal_viewport', array($this, 'calendarView'));
 		

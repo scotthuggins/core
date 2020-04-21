@@ -48,7 +48,24 @@ class product extends baseEntity{
 		parent::__construct();
 		
 	}
+	public function init(){
+		global $hooks;	
+		
+		
+		
+		$hooks->add_action('product_table_viewport', array($this, 'productMedia'));
+		$hooks->add_action('product_tile_viewport', array($this, 'productMedia'));
+		
+	}
 	
+	
+	public static function productMedia($entity){
+		global $hooks;
+		global $user;
+		include(dirname(dirname(dirname(dirname(__FILE__))))."/core/view/default/write_media_module_dynamic.php");
+		
+		
+	}
 	//Expect expects an array of data where elements should match object properties,
 	//elements that do no match properties will be ignored
 	public function validate(array $data){

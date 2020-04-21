@@ -26,8 +26,8 @@ echo '
 			
 			echo '<div style="max-width:150px;max-height:200px;" class="img-fluid float-left m-1 overflow-hidden responsive">';
 			
-			$hooks->do_action($entity->class_name.'_table_viewport',$plur_entity);
-			include(dirname(dirname(__FILE__))."/default/write_media_module_dynamic.php");
+			$hooks->do_action($entity->class_name.'_table_viewport',$entity);
+			//include(dirname(dirname(__FILE__))."/default/write_media_module_dynamic.php");
 			echo '</div>';
 			
 			

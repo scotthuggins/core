@@ -53,7 +53,8 @@ class user extends baseEntity{
 		timer('permissions',false);
 		
 		$hooks->add_action('user_actions', array(&$this, 'userActions'));
-		
+		$hooks->add_action('user_table_viewport', array($this, 'userMedia'));
+		$hooks->add_action('user_tile_viewport', array($this, 'userMedia'));
 		
 	}
 	
@@ -64,6 +65,13 @@ class user extends baseEntity{
 		
 	}
 	
+	public static function userMedia($entity){
+		global $hooks;
+		global $user;
+		include(dirname(dirname(dirname(dirname(__FILE__))))."/view/default/write_media_module_dynamic.php");
+		
+		
+	}
 	
 	//Expect expects an array of data where elements should match object properties,
 	//elements that do no match properties will be ignored

@@ -154,17 +154,19 @@ function loadCalendar(xmlObject){
 }
 
 $(window).resize(function() {
-	
-	//adjusts row heights for calendars
-  $(".calendar-row-content").each(function(){
-  	
-  	h = $(this).height();
-  	$(this).siblings(".calendar-table").height(h + 25);
-  	
-  });
-  
-  
-  
-  
+
+	calendar_resize();	
 });
+
+
+function calendar_resize(){
+	
+	$(".calendar-row-content").each(function(){
+  	
+  		h = $(this).height();
+  		$(this).siblings(".calendar-table").height(h + 25);
+  	
+  	});
+
+}
 

@@ -80,7 +80,7 @@ $(document).on("click", ".searchViewToggle", function(){
 		
 		$("#viewModal").show();
 		
-		loadListeners();
+		
 		
 	});
 
@@ -88,7 +88,7 @@ $(document).on("click", ".searchViewToggle", function(){
 	$(document).on("click", ".deleteModalButton", function(){
 		//alert(current_entity_name+" - "+current_entity_id);
 		sendRequest("index.php?api_request="+current_entity_name+"_delete_api&"+current_entity_name+"_id="+current_entity_id,'','POST','');
-		loadListeners();
+		
 		$('#viewModal').hide();
 		
 	});
@@ -102,7 +102,7 @@ $(document).on("click", ".searchViewToggle", function(){
 		var entity_name = element_id[3];
 		var entity_id = element_id[4]; 
 		sendRequest("index.php?api_request=getHTML&function_name=write_link_child_properties&entity_name="+entity_name+"&entity_id="+entity_id,loadLinkChildProperties,'POST',element_id);
-		loadListeners();
+		
 	});
 
 //############################################################
@@ -132,7 +132,7 @@ $(document).on("click", ".searchViewToggle", function(){
 		var row = '<tr>'+$(this).parent().parent().parent().html()+'<tr>';
 		
 		$('#link_child_table_'+entity_name+" tr:first").after(row);
-		loadListeners();
+		
 	});
 	
 
@@ -169,7 +169,7 @@ $(document).on("click", ".searchViewToggle", function(){
 		current_entity_name = entity_name;
 		current_entity_id = entity_id;
 		$("#viewModal").show();
-		loadListeners();
+		
 	});
 
 
@@ -244,7 +244,7 @@ $(document).on("click", ".searchViewToggle", function(){
 			sendRequest("index.php?process=pagination&entity="+entity_name+"&page="+page_id,'','GET',entity_name);
 		
 			sendRequest("index.php?api_request=getTable&current_entity_name="+entity_name+"&search_view="+search_view,loadSearchContainer,'POST',entity_name);
-			loadListeners();
+			
 		}
 		
 		current_entity_name = entity_name;
@@ -399,16 +399,18 @@ function loadMedia(xmlObject){
     //empty the child content
     sendRequest("index.php?api_request=getHTML&function_name=write_media_module_dynamic&entity_name="+entity_name+"&entity_id="+entity_id,updateMediaHTML,'POST',options);        
     
-	loadListeners();
+	
 }
 //##################################################
 function loadModal(xmlObject){
+
 	var html = xmlObject.responseText;
 	$('.modal-content').html(html);
 	
-	//$('.modal-title').text(current_entity_name);
-	loadListeners();
 	
+  	//This was placed here because on(show) could not be bound to the modal
+  	//Move this back to calendar.js ASAP
+ 	calendar_resize();
 	
 }
 //##################################################	
@@ -418,7 +420,7 @@ function loadModalEditForm(xmlObject){
 	loadLinkChildrenTable(xmlObject);
 	updateModalTitle(xmlObject);
 	updateObjectProperties(xmlObject);
-	loadListeners();
+	
 }
 
 
@@ -436,7 +438,7 @@ function loadLinkChildrenTable(xmlObject){
     	options = key;
 		sendRequest("index.php?api_request=getHTML&function_name=write_link_child_table&entity_name="+entity_name+"&entity_id="+entity_id+"&child_entity_name="+key,updateLinkChildHTML,'POST',options);        
     }
-  	loadListeners();
+  	
 	
 }
 
@@ -448,7 +450,7 @@ function loadSearchContainer(xmlObject,entity_name){
 	options = entity_name;
 	//load the new pagination
 	sendRequest("index.php?api_request=getHTML&function_name=pagination&entity_name="+entity_name,updatePagination,'POST',options);
-	//loadListeners();
+	
 }
 
 function loadSearchContainerPrev(xmlObject,entity_name){
@@ -459,7 +461,7 @@ function loadSearchContainerPrev(xmlObject,entity_name){
 	options = entity_name;
 	//load the new pagination
 	//sendRequest("index.php?api_request=getHTML&function_name=pagination&entity_name="+entity_name,updatePagination,'POST',options);
-	loadListeners();
+	
 }
 
 function loadSearchContainerNext(xmlObject,entity_name){
@@ -470,7 +472,7 @@ function loadSearchContainerNext(xmlObject,entity_name){
 	options = entity_name;
 	//load the new pagination
 	//sendRequest("index.php?api_request=getHTML&function_name=pagination&entity_name="+entity_name,updatePagination,'POST',options);
-	loadListeners();
+	
 }
 
 
@@ -480,7 +482,7 @@ function loadLinkChildrenSearchTable(xmlObject,entity_name){
 	var html = xmlObject.responseText;
 	
 	$(".search_result_"+entity_name).html(html);
-	loadListeners();
+	
 	
 }
 
@@ -489,7 +491,7 @@ function updatePagination(xmlObject,entity_name){
 	var html = xmlObject.responseText;
 	
 	$(".pagination_container").html(html);
-	loadListeners();
+	
 	
 }
 
@@ -499,7 +501,7 @@ function updateMediaHTML(xmlObject,entity_name){
 	var html = xmlObject.responseText;
 	
 	$(".modal_media_content").html(html);
-	loadListeners();
+	
 }
 
 //###########################################################
@@ -508,7 +510,7 @@ function updateLinkChildHTML(xmlObject,entity_name){
 	var html = xmlObject.responseText;
 	
 	$(".link_child_content_"+entity_name).append(html);
-	loadListeners();
+	
 	
 }
 //###########################################################
@@ -545,7 +547,7 @@ function updateObjectProperties(xmlObject){
 				//$("."+entityObject.class_name+"_"+entityObject.id+"_"+key).prop("checked", true);
 				
 				
-				console.log("."+entityObject.class_name+"_"+entityObject.id+"_"+key+" ."+entityObject[key][subkey]);
+				//console.log("."+entityObject.class_name+"_"+entityObject.id+"_"+key+" ."+entityObject[key][subkey]);
 			}
 		}
 		
@@ -735,27 +737,6 @@ function updateVisualObjectProperties(xmlObject){
 		$("."+entityObject.class_name+"_"+entityObject.id+"_"+key).text(entityObject[key]);
 	}
 }
-
-function loadListeners(){
-	//paginationScroll();
-	//paginationClick();
-	//searchViewToggle();
-	//searchViewCalendar();
-	//deleteButtonClick();
-	//editButtonClick();
-	//closeModalButtonClick();
-	//unlinkChildButtonClick();
-	//linkChildButtonClick();
-	//linkChildHeaderClick();
-	//editChildClick();
-	//updateChildClick();
-	//formSubmit();
-	
-	
-	
-}
-
-loadListeners();
 
 
 

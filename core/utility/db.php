@@ -106,8 +106,10 @@ class db{
 				
 		// Prepare statement
     	$stmt = $this->connx->prepare($sql);
-		try{$stmt->execute();}
-		catch(Exception $e){
+		try {
+			$stmt->execute();
+		}
+		catch (Exception $e){
 			trigger_error($e->getMessage());
 			trigger_error($sql);
 			print_r($this);	
@@ -116,10 +118,10 @@ class db{
 		}
 		timer('executeSql',FALSE);
 		//If the statement is insert
-		if($sql_word[0] == 'INSERT'){
+		if ($sql_word[0] == 'INSERT'){
 			return intval($this->connx->lastInsertId());
 		}
-		if($sql_word[0] == 'SELECT'){
+		if ($sql_word[0] == 'SELECT'){
 			$stmt->setFetchMode(PDO::FETCH_ASSOC);
 			return $stmt;
 		}	

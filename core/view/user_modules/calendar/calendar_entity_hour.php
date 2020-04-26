@@ -37,7 +37,7 @@ echo '<div
 echo '>';
 //echo $calendar_entity->name;
 foreach ($calendar_entity->config['primaryViewProperties'] as $prop){
-	echo $prop . ': ' . $calendar_entity->$prop .'<br>';
+	echo html_helper::cleanText($prop) . ': ' . $calendar_entity->$prop .'<br>';
 }   
 echo '</div>';
 

@@ -31,3 +31,13 @@ function timer($name,$start=TRUE){
 	
 	return $exe_timer;
 }
+
+
+function log_append($file,$content){
+	
+	//temp logger
+	$new_line = date("Y-m-d G:i:s",time()) . " > ". $content;
+	$content = file_get_contents($file);
+	$content .= $new_line . '<br>';
+	file_put_contents($file, $content);		
+}

@@ -30,7 +30,16 @@ class media extends baseEntity{
 	public function init(){
 		global $hooks;
 		
-		//$hooks->add_action('media_create_mid', array(&$this, 'upload'));
+		$hooks->add_action('user_table_viewport', array($this, 'media'));
+		$hooks->add_action('user_tile_viewport', array($this, 'media'));
+		
+		
+	}
+	
+	public static function media($entity){
+		global $hooks;
+		global $user;
+		include(dirname(dirname(dirname(dirname(__FILE__))))."/view/default/write_media_module_dynamic.php");
 		
 		
 	}

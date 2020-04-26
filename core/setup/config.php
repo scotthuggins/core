@@ -87,6 +87,8 @@ if ($_SERVER['SERVER_NAME'] == 'localhost')
 
 //get the autoloader
 require(dirname(dirname(__FILE__))."/utility/autoloader.php");
+
+
 require(dirname(dirname(__FILE__))."/utility/db.php");
 
 

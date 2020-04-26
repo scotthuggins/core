@@ -49,8 +49,10 @@ $(document).on("click", ".searchViewToggle", function(){
 		//Clear the page first
 		$('.search_result_primary_'+entity_name).empty();
 	
-		sendRequest("index.php?process=pagination&entity="+entity_name+"&page="+this_page,'','GET',entity_name);
-		sendRequest("index.php?api_request=getTable&current_entity_name="+entity_name+"&search_view="+search_view,loadSearchContainerPrev,'POST',entity_name);
+		sendAjax("index.php?process=pagination&entity="+entity_name+"&page="+this_page,'','GET',entity_name).done(function(data){ 
+			sendAjax("index.php?api_request=getTable&current_entity_name="+entity_name+"&search_view="+search_view,loadSearchContainerPrev,'POST',entity_name);
+		});
+		
 	});
 
 //###########################################################
@@ -73,8 +75,11 @@ $(document).on("click", ".searchViewToggle", function(){
 		var element_id = $(this).attr('id').split('_');
 		var entity_name = element_id[0];
 		var entity_id = element_id[1]; 
-		sendRequest("index.php?api_request=getHTML&function_name=write_entity_modal&entity_name="+entity_name+"&entity_id="+entity_id,loadModal,'POST','');
-		sendRequest("index.php?api_request=getEntity&entity_name="+entity_name+"&entity_id="+entity_id,loadModalEditForm,'POST',''); 
+		
+		sendAjax("index.php?api_request=getHTML&function_name=write_entity_modal&entity_name="+entity_name+"&entity_id="+entity_id,loadModal,'POST','').done(function(data){
+			sendAjax("index.php?api_request=getEntity&entity_name="+entity_name+"&entity_id="+entity_id,loadModalEditForm,'POST','');
+		});
+		 
 		current_entity_name = entity_name;
 		current_entity_id = entity_id;
 		
@@ -87,7 +92,7 @@ $(document).on("click", ".searchViewToggle", function(){
 //#################################
 	$(document).on("click", ".deleteModalButton", function(){
 		//alert(current_entity_name+" - "+current_entity_id);
-		sendRequest("index.php?api_request="+current_entity_name+"_delete_api&"+current_entity_name+"_id="+current_entity_id,'','POST','');
+		sendAjax("index.php?api_request="+current_entity_name+"_delete_api&"+current_entity_name+"_id="+current_entity_id,'','POST','');
 		
 		$('#viewModal').hide();
 		
@@ -101,7 +106,7 @@ $(document).on("click", ".searchViewToggle", function(){
 		var element_id = $(this).attr('id').split('_');
 		var entity_name = element_id[3];
 		var entity_id = element_id[4]; 
-		sendRequest("index.php?api_request=getHTML&function_name=write_link_child_properties&entity_name="+entity_name+"&entity_id="+entity_id,loadLinkChildProperties,'POST',element_id);
+		sendAjax("index.php?api_request=getHTML&function_name=write_link_child_properties&entity_name="+entity_name+"&entity_id="+entity_id,loadLinkChildProperties,'POST',element_id);
 		
 	});
 
@@ -114,7 +119,7 @@ $(document).on("click", ".searchViewToggle", function(){
 		var entity_id = element_id[2]; 
 		//get the api name by creating the node name
 		var nodeName = createNodeName(entity_name,current_entity_name);
-		sendRequest("index.php?api_request="+nodeName+"_link_api&"+entity_name+"_id="+entity_id+"&"+current_entity_name+"_id="+current_entity_id,'','POST',''); 
+		sendAjax("index.php?api_request="+nodeName+"_link_api&"+entity_name+"_id="+entity_id+"&"+current_entity_name+"_id="+current_entity_id,'','POST',''); 
 		
 		//remove the row after the request is successful
 		$(this).parent().parent().parent().fadeOut('1000');
@@ -147,7 +152,7 @@ $(document).on("click", ".searchViewToggle", function(){
 		//alert(entity_id);
 		//get the api name by creating the node name
 		var nodeName = createNodeName(entity_name,current_entity_name);
-		sendRequest("index.php?api_request="+nodeName+"_unlink_api&"+entity_name+"_id="+entity_id+"&"+current_entity_name+"_id="+current_entity_id,'','POST',''); 
+		sendAjax("index.php?api_request="+nodeName+"_unlink_api&"+entity_name+"_id="+entity_id+"&"+current_entity_name+"_id="+current_entity_id,'','POST',''); 
 		
 		//remove the row after the request is successful
 		$(this).parent().parent().parent().fadeOut('1000');
@@ -161,11 +166,14 @@ $(document).on("click", ".searchViewToggle", function(){
 		var entity_name = element_id[1];
 		var entity_id = element_id[2]; 
 		//load the modal
-		sendRequest("index.php?api_request=getHTML&function_name=write_entity_modal&entity_name="+entity_name+"&entity_id="+entity_id,loadModal,'POST','');
-		//load the form
-		sendRequest("index.php?api_request=getEntity&entity_name="+entity_name+"&entity_id="+entity_id,loadModalEditForm,'POST',''); 
+		sendAjax("index.php?api_request=getHTML&function_name=write_entity_modal&entity_name="+entity_name+"&entity_id="+entity_id,loadModal,'POST','').done(function(data){
+			
+			//load the form
+			sendAjax("index.php?api_request=getEntity&entity_name="+entity_name+"&entity_id="+entity_id,loadModalEditForm,'POST',''); 
+		});
+		
 		//load the children headers
-		//sendRequest("index.php?api_request=getHTML&function_name=write_link_child_header&entity_name="+entity_name+"&entity_id="+entity_id,loadLinkChildHTML,'POST',entity_name);
+		//sendAjax("index.php?api_request=getHTML&function_name=write_link_child_header&entity_name="+entity_name+"&entity_id="+entity_id,loadLinkChildHTML,'POST',entity_name);
 		current_entity_name = entity_name;
 		current_entity_id = entity_id;
 		$("#viewModal").show();
@@ -210,7 +218,7 @@ $(document).on("click", ".searchViewToggle", function(){
 		});
 		
 		//alert(url_string); 
-		sendRequest(url_string,'','GET','');
+		sendAjax(url_string,'','GET','');
 		
 	});
 
@@ -236,15 +244,14 @@ $(document).on("click", ".searchViewToggle", function(){
 		//check if the page segment already exists
 		if ( $( "#page_segment_"+page_id ).length ) {
 			//ONLY notify the server of the new page number via 
-			sendRequest("index.php?process=pagination&entity="+entity_name+"&page="+page_id,'','GET',entity_name);
+			sendAjax("index.php?process=pagination&entity="+entity_name+"&page="+page_id,'','GET',entity_name);
 		
 		
 		} else {
 			//notify the server of the new page number via and load the view
-			sendRequest("index.php?process=pagination&entity="+entity_name+"&page="+page_id,'','GET',entity_name);
-		
-			sendRequest("index.php?api_request=getTable&current_entity_name="+entity_name+"&search_view="+search_view,loadSearchContainer,'POST',entity_name);
-			
+			sendAjax("index.php?process=pagination&entity="+entity_name+"&page="+page_id,'','GET',entity_name).done(function(data){
+				sendAjax("index.php?api_request=getTable&current_entity_name="+entity_name+"&search_view="+search_view,loadSearchContainer,'POST',entity_name);
+			});
 		}
 		
 		current_entity_name = entity_name;
@@ -293,7 +300,7 @@ $(document).on("click", ".searchViewToggle", function(){
 					$('#paginationCorousel').carousel(carouselPage);
 					
 					//notify the server we can moved pages
-					//sendRequest("index.php?process=pagination&entity="+entity_name+"&page="+this_page,'','GET',entity_name);
+					//sendAjax("index.php?process=pagination&entity="+entity_name+"&page="+this_page,'','GET',entity_name);
    					
    					console.log(entity_name+" In view port & Page: " + view_page_id);
    					
@@ -347,8 +354,10 @@ $(document).on("click", ".searchViewToggle", function(){
 	    		var old_height = $(document).height();  //store document height before modifications
 				var old_scroll = $(window).scrollTop(); //remember the scroll position
 	        	
-	        	sendRequest("index.php?process=pagination&entity="+entity_name+"&page="+prev_page,'','GET',entity_name);
-		    	sendRequest("index.php?api_request=getTable&current_entity_name="+entity_name+"&search_view="+search_view,loadSearchContainerPrev,'POST',entity_name);
+	        	sendAjax("index.php?process=pagination&entity="+entity_name+"&page="+prev_page,'','GET',entity_name).done(function(data){
+	        		sendAjax("index.php?api_request=getTable&current_entity_name="+entity_name+"&search_view="+search_view,loadSearchContainerPrev,'POST',entity_name);
+	        	});
+		    	
 		    	
 		    	//Restore Scroll Positionl to this page to prevent getting sent to top of page and retriggering
 		    	$(document).scrollTop(old_scroll + $(document).height() - old_height + 50);
@@ -374,8 +383,10 @@ $(document).on("click", ".searchViewToggle", function(){
 		        	//console.log('Loading... Page: ' + this_page + ' Dir: ' + direction + ' prev: '+ prev_page + " this: " + this_page + " next: " + next_page);
 		        	console.log('Loading Down Page: ' + next_page );
 		        	
-		        	sendRequest("index.php?process=pagination&entity="+entity_name+"&page="+next_page,'','GET',entity_name);
-			    	sendRequest("index.php?api_request=getTable&current_entity_name="+entity_name+"&search_view="+search_view,loadSearchContainerNext,'POST',entity_name);
+		        	sendAjax("index.php?process=pagination&entity="+entity_name+"&page="+next_page,'','GET',entity_name).done(function(data){
+		        		sendAjax("index.php?api_request=getTable&current_entity_name="+entity_name+"&search_view="+search_view,loadSearchContainerNext,'POST',entity_name);
+		        	});
+			    	
 		       		
 		       		//move this page forward..
 			    	this_page++;
@@ -392,19 +403,19 @@ $(document).on("click", ".searchViewToggle", function(){
 //	LOADERS
 //##################################################
 function loadMedia(xmlObject){
-	var entityObject = JSON.parse(xmlObject.responseText);
+	var entityObject = JSON.parse(xmlObject);
     var entity_name = entityObject['class_name'];
     var entity_id = entityObject['id'];
     var options = entity_name;
     //empty the child content
-    sendRequest("index.php?api_request=getHTML&function_name=write_media_module_dynamic&entity_name="+entity_name+"&entity_id="+entity_id,updateMediaHTML,'POST',options);        
+    sendAjax("index.php?api_request=getHTML&function_name=write_media_module_dynamic&entity_name="+entity_name+"&entity_id="+entity_id,updateMediaHTML,'POST',options);        
     
 	
 }
 //##################################################
 function loadModal(xmlObject){
 
-	var html = xmlObject.responseText;
+	var html = xmlObject;
 	$('.modal-content').html(html);
 	
 	
@@ -427,7 +438,7 @@ function loadModalEditForm(xmlObject){
 //##################################################
 //Passed a parent, so lets load its children
 function loadLinkChildrenTable(xmlObject){
-	var entityObject = JSON.parse(xmlObject.responseText);
+	var entityObject = JSON.parse(xmlObject);
     var entity_name = entityObject['class_name'];
     var entity_id = entityObject['id'];
     var options = entity_name;
@@ -436,42 +447,42 @@ function loadLinkChildrenTable(xmlObject){
     	key = entityObject['config']['associations']['has'][key];
     	$(".link_child_content_"+key).empty();
     	options = key;
-		sendRequest("index.php?api_request=getHTML&function_name=write_link_child_table&entity_name="+entity_name+"&entity_id="+entity_id+"&child_entity_name="+key,updateLinkChildHTML,'POST',options);        
+		sendAjax("index.php?api_request=getHTML&function_name=write_link_child_table&entity_name="+entity_name+"&entity_id="+entity_id+"&child_entity_name="+key,updateLinkChildHTML,'POST',options);        
     }
   	
 	
 }
 
 function loadSearchContainer(xmlObject,entity_name){
-	var html = xmlObject.responseText;
+	var html = xmlObject;
 	
 	//load the search results
 	$(".search_result_primary_"+entity_name).html(html);
 	options = entity_name;
 	//load the new pagination
-	sendRequest("index.php?api_request=getHTML&function_name=pagination&entity_name="+entity_name,updatePagination,'POST',options);
+	sendAjax("index.php?api_request=getHTML&function_name=pagination&entity_name="+entity_name,updatePagination,'POST',options);
 	
 }
 
 function loadSearchContainerPrev(xmlObject,entity_name){
-	var html = xmlObject.responseText;
+	var html = xmlObject;
 	
 	//load the search results
 	$(".search_result_primary_"+entity_name).prepend(html);
 	options = entity_name;
 	//load the new pagination
-	//sendRequest("index.php?api_request=getHTML&function_name=pagination&entity_name="+entity_name,updatePagination,'POST',options);
+	//sendAjax("index.php?api_request=getHTML&function_name=pagination&entity_name="+entity_name,updatePagination,'POST',options);
 	
 }
 
 function loadSearchContainerNext(xmlObject,entity_name){
-	var html = xmlObject.responseText;
+	var html = xmlObject;
 	
 	//load the search results
 	$(".search_result_primary_"+entity_name).append(html);
 	options = entity_name;
 	//load the new pagination
-	//sendRequest("index.php?api_request=getHTML&function_name=pagination&entity_name="+entity_name,updatePagination,'POST',options);
+	//sendAjax("index.php?api_request=getHTML&function_name=pagination&entity_name="+entity_name,updatePagination,'POST',options);
 	
 }
 
@@ -479,7 +490,7 @@ function loadSearchContainerNext(xmlObject,entity_name){
 //##################################################
 //Passed a xml object, entity name of search table to populate
 function loadLinkChildrenSearchTable(xmlObject,entity_name){
-	var html = xmlObject.responseText;
+	var html = xmlObject;
 	
 	$(".search_result_"+entity_name).html(html);
 	
@@ -488,7 +499,7 @@ function loadLinkChildrenSearchTable(xmlObject,entity_name){
 
 function updatePagination(xmlObject,entity_name){
 	//appends pagination to the DOM from a entities page search 
-	var html = xmlObject.responseText;
+	var html = xmlObject;
 	
 	$(".pagination_container").html(html);
 	
@@ -498,7 +509,7 @@ function updatePagination(xmlObject,entity_name){
 
 function updateMediaHTML(xmlObject,entity_name){
 	//appends link_child_content to the DOM from a loadLinkChildren() call. 
-	var html = xmlObject.responseText;
+	var html = xmlObject;
 	
 	$(".modal_media_content").html(html);
 	
@@ -507,7 +518,7 @@ function updateMediaHTML(xmlObject,entity_name){
 //###########################################################
 function updateLinkChildHTML(xmlObject,entity_name){
 	//appends link_child_content to the DOM from a loadLinkChildren() call. 
-	var html = xmlObject.responseText;
+	var html = xmlObject;
 	
 	$(".link_child_content_"+entity_name).append(html);
 	
@@ -516,7 +527,7 @@ function updateLinkChildHTML(xmlObject,entity_name){
 //###########################################################
 function updateEditForm(xmlObject){
 	
-	var entityObject = JSON.parse(xmlObject.responseText);
+	var entityObject = JSON.parse(xmlObject);
     
     for(key in entityObject) {
     	//format selectors as: $(".company_name").text(entityObject.name);
@@ -529,7 +540,7 @@ function updateEditForm(xmlObject){
 }
 //###########################################################
 function updateObjectProperties(xmlObject){
-	var entityObject = JSON.parse(xmlObject.responseText);
+	var entityObject = JSON.parse(xmlObject);
     
     for(key in entityObject) {
     	//format selectors as: $(".company_name").text(entityObject.name);
@@ -539,6 +550,10 @@ function updateObjectProperties(xmlObject){
 		if(Array.isArray(entityObject[key])){
 			
 			for(subkey in entityObject[key]){
+				
+				//ignore nested objects
+				if (typeof entityObject[key][subkey] === 'object'){continue;}
+				
 				//console.log(entityObject[key][subkey]);
 				
 				$("."+entityObject.class_name+"_"+entityObject.id+"_"+key).filter("."+entityObject[key][subkey]).prop("checked", true);
@@ -556,7 +571,7 @@ function updateObjectProperties(xmlObject){
 }
 //############################################################
 function updateModalTitle(xmlObject){
-	var entityObject = JSON.parse(xmlObject.responseText);
+	var entityObject = JSON.parse(xmlObject);
 	
 	if (typeof entityObject.config.altPublicName !== 'undefined'){
 		$('.modal-title').text(entityObject.config.altPublicName);	
@@ -594,6 +609,42 @@ function createNodeNameAsArray(entity_1,entity_2){
 	entity_array.sort();
 	return entity_array;
 }
+
+function sendAjax(url,callback,postData,options){
+	
+	return $.ajax({
+		url: url,
+		method: postData,
+	})
+	.always( function( data ){
+		if(callback){
+			//alert(callback);
+			callback(data,options);
+		}
+	})
+	.fail( function ( data){
+		//alert('failed');
+		if ( data )
+      		console.log( data );
+		
+	});
+}
+
+//loading container;
+
+$(document)
+  .ajaxStart(function () {
+  	
+  	
+  	$('.loader').fadeIn('600');
+  	
+    
+  })
+  .ajaxStop(function () {
+    $('.loader').hide();
+    
+ 	});
+
 
 function sendRequest(url,callback,postData,options) {
 	var req = createXMLHTTPObject();
@@ -638,6 +689,8 @@ function createXMLHTTPObject() {
 	}
 	return xmlhttp;
 }
+
+
 //
 //###########################################################	
 //Process all forms as jQuery
@@ -672,7 +725,7 @@ function createXMLHTTPObject() {
 		
 		
 		//commented 6.12.19 to prevent multiple calls during a main search...
-		//sendRequest("index.php?api_request=getTable&current_entity_name="+entity_name+"&search_view="+search_view,loadSearchContainer,'POST',entity_name);
+		//sendAjax("index.php?api_request=getTable&current_entity_name="+entity_name+"&search_view="+search_view,loadSearchContainer,'POST',entity_name);
 		//append "_api" and the current entity name
 		var action = "index.php/?api_request="+targetURLArray[1]+"_api&current_entity_name="+current_entity_name;
 		
@@ -707,10 +760,10 @@ function createXMLHTTPObject() {
             success : function( data ) {
 						if(0 == is_main_search){
 							//load main_view tables
-							sendRequest("index.php?api_request=getTable&current_entity_name="+entity_name+"&search_view="+search_view,loadSearchContainer,'POST',entity_name);
+							sendAjax("index.php?api_request=getTable&current_entity_name="+entity_name+"&search_view="+search_view,loadSearchContainer,'POST',entity_name);
 						} else {
 							//updateVisualObjectProperties(data);            	
-            				sendRequest("index.php?api_request=getHTML&function_name=write_link_child_search_table&current_entity_name="+entity_name+"&calling_class="+calling_class+"&search_view=table",loadLinkChildrenSearchTable,'POST',entity_name);
+            				sendAjax("index.php?api_request=getHTML&function_name=write_link_child_search_table&current_entity_name="+entity_name+"&calling_class="+calling_class+"&search_view=table",loadLinkChildrenSearchTable,'POST',entity_name);
             				
             				
             				//loadLinkChildrenSearchTable(data,entity_name);
@@ -730,7 +783,7 @@ function createXMLHTTPObject() {
 
 function updateVisualObjectProperties(xmlObject){
 	
-	var entityObject = xmlObject;
+	var entityObject = JSON.parse(xmlObject);
     //update all html spans by entityName_entityID_entityProperty with text of that property
     for(key in entityObject) {
     	//format selectors as: $(".company_name").text(entityObject.name);

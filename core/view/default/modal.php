@@ -4,3 +4,9 @@
 		</div>
 	</div>
 </div>
+<div class=" loader modal mx-auto "  style="z-index:20002">
+	<div class="modal-dialog modal-dialog-centered d-flex justify-content-center" >
+		<div class="modal-spinner"></div>
+	</div>
+
+</div>

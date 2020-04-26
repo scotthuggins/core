@@ -16,5 +16,6 @@ core/vendor/
 
 # Apanta
 .settings/
+*.project
 
 
